@@ -55,10 +55,10 @@ RUN set -ex \
 
 ENV GOROOT="$GOBUILDDIR/go"
 ENV GOPATH="$GOBUILDDIR/godev"
-ENV PATH="$GOPATH/bin:$PATH"
+ENV PATH="$GOROOT/bin:$GOPATH/bin:$PATH"
 
 
-RUN mkdir -p "$GOPATH/bin" && chmod -R 755 "$GOPATH/bin"
+RUN mkdir -p "$GOPATH/bin" && mkdir -p "$GOPATH/src" && chmod -R 755 "$GOPATH/bin"
 
 
 RUN apk add --no-cache --virtual .build-deps \
@@ -119,6 +119,6 @@ RUN mkdir -p "$APID_SRC" \
 
 
 #Remove build time deps
-RUN apk add del .build-deps 
+RUN apk del .build-deps 
 #These steps need to run last so we can keep the intermediate image and not need to constantly build go 1.7
 RUN rm -rf "$GOBUILDDIR"
